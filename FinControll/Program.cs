@@ -1,7 +1,11 @@
-using Microsoft.OpenApi;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
+Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(builder.Configuration).CreateLogger();
+
+builder.Host.UseSerilog();
+    
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
@@ -22,6 +26,8 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
+app.UseSerilogRequestLogging();
+
 app.UseHttpsRedirection();
 
 var summaries = new[]
@@ -31,6 +37,14 @@ var summaries = new[]
 
 app.MapGet("/weatherforecast", () =>
 {
+
+    Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Debug()
+    .WriteTo.Console()
+    .WriteTo.File("logs/myapp.txt", rollingInterval: RollingInterval.Day)
+    .CreateLogger();
+
+    Log.Information("Hello, world!");
     var forecast =  Enumerable.Range(1, 5).Select(index =>
         new WeatherForecast
         (
