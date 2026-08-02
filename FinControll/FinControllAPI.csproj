@@ -11,4 +11,9 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="10.2.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\FinControll.Application\FinControll.Application.csproj" />
+    <ProjectReference Include="..\FinControll.Infrastructure\FinControll.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>
